@@ -1,0 +1,40 @@
+version: '3.8'
+name: spotter-interview
+services:
+  store:
+    image: bitnami/postgresql:latest
+    container_name: store
+    volumes:
+      - ./ddl:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRESQL_USERNAME=admin
+      - POSTGRESQL_PASSWORD=admin
+      - POSTGRESQL_DATABASE=beatsheet
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "admin" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+  beatsheet:
+    image: fmatar/beatsheet:0.0.1
+    container_name: beatsheet
+    environment:
+      QUARKUS_DATASOURCE_REACTIVE_URL: postgresql://store:5432/beatsheet
+      QUARKUS_DATASOURCE_REACTIVE_MAX_SIZE: 24
+      QUARKUS_HIBERNATE_ORM_DATABASE_GENERATION: none
+      QUARKUS_HIBERNATE_ORM_LOG_SQL: false
+#    healthcheck:
+#      test: [ "CMD", "curl", "--fail", "http://localhost:8080/q/health" ]
+#      interval: 5s
+#      timeout: 2s
+#      retries: 15
+    ports:
+      - "8080:8080"
+    depends_on:
+      store:
+        condition: service_healthy
+volumes:
+  postgresql_data:
+    driver: local
