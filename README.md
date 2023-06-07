@@ -10,13 +10,15 @@ The backend docker container doesn't have cors issue resolved. You will need to 
 - This app was built on node version `18.16.0`. 
 
 ### Steps to get starts
-1. Install dependencies. `npm install`
-2. Start environment. `npm run dev`
+1. `cd` into `frontend` folder
+2. Install dependencies. `npm install`
+3. Start environment. `npm run dev`
 
 
 ## Backend
 ### How to Run Docker Compose
 
+1. `cd` into `backend` folder.
 Run the following command to create the Docker container:
 
 ```bash
